@@ -1,24 +1,17 @@
-import { createFileRoute } from "@tanstack/react-router";
-
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
-export const Route = createFileRoute("/")({
-  component: Index,
-});
-
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
+import { useState } from 'react';
+import { ArrowRight, Eye, EyeOff, Pause, Play, Square, Pencil, CornerDownRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Plant, Sticker } from '@/components/pikup-art';
+import { Footer } from '@/components/pikup-shell';
+import { formatTime, usePikup } from '@/lib/pikup';
+export const Route=createFileRoute('/')({head:()=>({meta:[{title:'Pikup — Know you’re working on the right thing'},{name:'description',content:'A personal project notebook for intentional work. Pick up your last intention, focus, and reflect.'},{property:'og:title',content:'Pikup — Work with intention'},{property:'og:description',content:'One project. One intention at a time. A quieter way to make trustworthy progress.'},{property:'og:type',content:'website'},{name:'twitter:card',content:'summary_large_image'}]}),component:Index});
 function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
+ const {last,timer,elapsed,ready,start,pause,stats,pins}=usePikup(); const [hidden,setHidden]=useState(false); const navigate=useNavigate(); const digits=formatTime(elapsed);
+ return <main className="page"><div className="eyebrow">Your personal project notebook</div><h1 className="hand-title mt-3">Know you’re working on the right thing.</h1><p className="text-muted-foreground text-sm mt-3">A small intention. A focused session. Progress you can trust.</p>
+ <div className="home-grid"><div><section className="note" aria-label="Last session note"><span className="tape" aria-hidden="true"/><div className="note-label"><Pencil size={13}/>{last?'Where you left off':'A fresh page'}</div><p className="note-copy">{last?last.worked:'Your first session is the start of your story.'}</p><div className="note-divider"/><div className="note-label"><CornerDownRight size={14}/>Your next intention</div><p className="note-copy text-primary">{last?last.intention:'One thing, chosen by you.'}</p>{!last&&<p className="text-xs text-muted-foreground mt-3 leading-relaxed">After your first session, your note and next intention will be waiting here.</p>}{pins.length>0&&<div className="pinned-stickers" aria-label="Your pinned weekly stickers">{pins.map(id=><Sticker key={id} id={id}/>)}</div>}</section>
+ <section className="timer-section" aria-label="Session timer">{hidden&&timer.active?<div className="hidden-timer">Just you and your project.</div>:<div className="timer-digits" role="timer" aria-label={`${digits[0]} hours ${digits[1]} minutes ${digits[2]} seconds`}>{digits[0]}<span className="colon">:</span>{digits[1]}<span className="colon">:</span>{digits[2]}</div>}<p className="timer-caption">{timer.startedAt?'A little space to focus.':timer.active?'Take your time. Your session is paused.':'No rush. This time is yours.'}</p>
+ {!timer.active?<Button className="start-button" onClick={start} disabled={!ready}><Play size={16} fill="currentColor"/>Start session</Button>:<><div className="flex justify-center gap-3 mt-6"><Button variant="outline" onClick={timer.startedAt?pause:start}>{timer.startedAt?<Pause/>:<Play/>}{timer.startedAt?'Pause':'Resume'}</Button><Button variant="secondary" onClick={()=>{pause();navigate({to:'/end-session'});}}><Square/>End session</Button></div><Button variant="ghost" size="sm" className="mt-3 text-muted-foreground" onClick={()=>setHidden(h=>!h)}>{hidden?<Eye/>:<EyeOff/>}{hidden?'Show timer':'Hide timer'}</Button></>}
+ <p className="quiet-message">{timer.active?'Make room for what matters.':'Less wandering. More intentional doing.'}</p></section></div>
+ <aside className="side-garden"><div className="garden-heading"><p className="hand text-2xl">A little growth this week</p><p className="text-xs text-muted-foreground mt-1">Tended one intention at a time.</p></div><Plant growth={stats.yes}/><div className="side-metrics"><div><strong>{stats.hours.toFixed(1)} <span className="text-base">hrs</span></strong><p>deep work</p></div><div><strong>{stats.yes}<span className="text-base"> / {stats.judged}</span></strong><p>sessions on track</p></div></div><p className="hand text-xl text-muted-foreground mt-5 garden-note">{stats.yes?'Look at you, showing up with intention.':'Good things start small.'}</p><Button variant="link" asChild className="mt-3 weekly-link text-xs"><Link to="/weekly">Visit your weekly garden<ArrowRight/></Link></Button></aside></div><Footer/></main>;
 }
