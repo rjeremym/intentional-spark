@@ -109,7 +109,7 @@
  .side-garden {display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:14px;} .side-garden .plant-art {width:140px;height:160px;margin:0 auto;} .side-garden .garden-heading {grid-column:1/-1;}
  .side-garden .side-metrics {margin:0;padding:0;border:0;} .side-garden .garden-note {grid-column:1/-1;} .side-garden .weekly-link {grid-column:1/-1;}
  .footer {margin:35px 0 0;gap:15px;padding-top:17px;} .weekly-top {align-items:start;flex-direction:column;gap:12px;}
- .metric {padding-left:8px;} .metric + .metric {padding-left:21px;} .metric-value {font-size:32px;} .metric-value small {font-size:17px;} .weekly-metrics {padding:23px 0;}
+ .metric {padding-left:8px;} .metric + .metric {padding-left:21px;} .metric .eyebrow {min-height:36px;} .metric-value {font-size:32px;} .metric-value small {font-size:17px;} .weekly-metrics {padding:23px 0;}
  .growth-grid {grid-template-columns:1fr;gap:35px;} .growth-grid > section + section {border-top:1px dashed var(--border);padding-top:28px;}
  .pinned-stickers {right:-8px;} .pinned-stickers .sticker {width:53px;height:53px;} .pinned-stickers svg {width:28px;height:28px;}
  .save-line {align-items:start;flex-direction:column-reverse;} .save-line button {width:100%;} .note-copy {font-size:25px;}
